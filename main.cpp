@@ -12,6 +12,7 @@ int main()
     S_BOARD board[1];
 
     ParseFen((char *)START_FEN, board);
+    ASSERT(CheckBoard(board));
     PrintBoard(board);
 
     ParseFen((char *)FEN_1, board);
@@ -21,6 +22,9 @@ int main()
     PrintBoard(board);
 
     ParseFen((char *)FEN_3, board);
+    PrintBoard(board);
+
+    ParseFen((char *)FEN_4, board);
     PrintBoard(board);
 
     return 0;

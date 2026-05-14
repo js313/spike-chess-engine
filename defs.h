@@ -32,6 +32,7 @@ typedef unsigned long long U64;
 #define FEN_1 "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
 #define FEN_2 "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2"
 #define FEN_3 "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
+#define FEN_4 "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/pppBBppp/R3K2R w KQkq - 0 1"
 
 enum
 {
@@ -194,9 +195,10 @@ typedef struct
     U64 posKey;
 
     int pceNum[13];
-    int bigPce[3];
-    int majPce[3];
-    int minPce[3];
+    int bigPce[2];
+    int majPce[2];
+    int minPce[2];
+    int material[2];
 
     S_UNDO history[MAX_GAME_MOVES];
 
@@ -223,6 +225,15 @@ extern char SideChar[];
 extern char RankChar[];
 extern char FileChar[];
 
+extern int PieceBig[13];
+extern int PieceMaj[13];
+extern int PieceMin[13];
+extern int PieceVal[13];
+extern int PieceCol[13];
+
+extern int FilesBrd[BRD_SQ_NUM];
+extern int RanksBrd[BRD_SQ_NUM];
+
 extern void AllInit();
 extern void PrintBitBoard(U64 bb);
 extern int CountBits(U64 b);
@@ -231,5 +242,7 @@ extern void ResetBoard(S_BOARD *pos);
 extern int ParseFen(char *fen, S_BOARD *pos);
 extern U64 GeneratePosKey(const S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
+extern void UpdateListsMaterial(S_BOARD *pos);
+extern int CheckBoard(const S_BOARD *pos);
 
 #endif
