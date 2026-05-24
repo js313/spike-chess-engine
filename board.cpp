@@ -278,6 +278,7 @@ void ResetBoard(S_BOARD *pos)
         pos->bigPce[i] = 0;
         pos->majPce[i] = 0;
         pos->minPce[i] = 0;
+        pos->material[i] = 0;
         pos->pawns[i] = 0ULL;
     }
 
@@ -329,5 +330,5 @@ void PrintBoard(const S_BOARD *pos)
               << ((pos->castlePerm & BKCA) ? 'k' : '-')
               << ((pos->castlePerm & BQCA) ? 'q' : '-')
               << std::endl;
-    std::cout << "PosKey: " << pos->posKey;
+    std::cout << "PosKey: " << pos->posKey << std::endl;
 }

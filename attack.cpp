@@ -9,6 +9,10 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
 {
     int index, pce, t_sq, dir;
 
+    ASSERT(SqOnBoard(sq));
+    ASSERT(SideValid(side));
+    ASSERT(CheckBoard(pos));
+
     if (side == WHITE)
     {
         if (pos->pieces[sq - 11] == wP || pos->pieces[sq - 9] == wP)
@@ -27,7 +31,8 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
     for (index = 0; index < 8; index++)
     {
         pce = pos->pieces[sq + KnDir[index]];
-        if (IsKn(pce) && PieceCol[pce] == side)
+
+        if (SqOnBoard(pce) && IsKn(pce) && PieceCol[pce] == side)
         {
             return TRUE;
         }
@@ -76,7 +81,7 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
     for (index = 0; index < 8; index++)
     {
         pce = pos->pieces[sq + KiDir[index]];
-        if (IsKi(pce) && PieceCol[pce] == side)
+        if (SqOnBoard(pce) && IsKi(pce) && PieceCol[pce] == side)
         {
             return TRUE;
         }
