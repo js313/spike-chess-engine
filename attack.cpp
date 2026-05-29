@@ -17,14 +17,14 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
     {
         if (pos->pieces[sq - 11] == wP || pos->pieces[sq - 9] == wP)
         {
-            return TRUE;
+            return true;
         }
     }
     else
     {
         if (pos->pieces[sq + 11] == bP || pos->pieces[sq + 9] == bP)
         {
-            return TRUE;
+            return true;
         }
     }
 
@@ -34,7 +34,7 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
 
         if (SqOnBoard(pce) && IsKn(pce) && PieceCol[pce] == side)
         {
-            return TRUE;
+            return true;
         }
     }
 
@@ -49,7 +49,7 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
             {
                 if (IsRQ(pce) && PieceCol[pce] == side)
                 {
-                    return TRUE;
+                    return true;
                 }
                 break;
             }
@@ -69,7 +69,7 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
             {
                 if (IsBQ(pce) && PieceCol[pce] == side)
                 {
-                    return TRUE;
+                    return true;
                 }
                 break;
             }
@@ -83,9 +83,9 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
         pce = pos->pieces[sq + KiDir[index]];
         if (SqOnBoard(pce) && IsKi(pce) && PieceCol[pce] == side)
         {
-            return TRUE;
+            return true;
         }
     }
 
-    return FALSE;
+    return false;
 }

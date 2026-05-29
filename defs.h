@@ -155,12 +155,6 @@ enum
 
 enum
 {
-    FALSE,
-    TRUE
-};
-
-enum
-{
     WKCA = 1,
     WQCA = 2,
     BKCA = 4,
@@ -271,6 +265,7 @@ extern int PieceCol[13];
 extern int FilesBrd[BRD_SQ_NUM];
 extern int RanksBrd[BRD_SQ_NUM];
 
+extern int PiecePawn[13];
 extern int PieceKnight[13];
 extern int PieceKing[13];
 extern int PieceRookQueen[13];
@@ -302,5 +297,10 @@ extern int PieceValidEmpty(const int pce);
 extern int PieceValid(const int pce);
 
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
+
+extern int MakeMove(S_BOARD *pos, int move);
+extern void TakeMove(S_BOARD *pos);
+
+extern void PerftTest(int depth, S_BOARD *pos);
 
 #endif

@@ -14,7 +14,7 @@ void ShowSqAtBySide(const int side, const S_BOARD *pos)
         for (file = FILE_A; file <= FILE_H; file++)
         {
             sq = FR2SQ(file, rank);
-            if (SqAttacked(sq, side, pos) == TRUE)
+            if (SqAttacked(sq, side, pos) == true)
             {
                 std::cout << "X";
             }
@@ -38,6 +38,9 @@ int main()
     // PrintBoard(&board);
     S_BOARD board[1];
 
+    ParseFen((char *)START_FEN, board);
+    PerftTest(4, board);
+
     // ParseFen((char *)START_FEN, board);
     // ASSERT(CheckBoard(board));
     // PrintBoard(board);
@@ -50,15 +53,13 @@ int main()
     // ParseFen((char *)("6k1/1b6/4n3/8/1n4B1/1B3N2/1N6/2b3K1 w - - 0 1"), board);
     // ParseFen((char *)("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1"), board);
     // ParseFen((char *)("r3k2r/8/8/8/8/8/6p1/R3K2R b KQk - 0 1"), board);
-    ParseFen((char *)("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"), board);
+    // ParseFen((char *)("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"), board);
 
-    PrintBoard(board);
+    // PrintBoard(board);
 
-    S_MOVELIST list[1];
+    // GenerateAllMoves(board, list);
 
-    GenerateAllMoves(board, list);
-
-    PrMoveList(list);
+    // PrMoveList(list);
 
     // ShowSqAtBySide(WHITE, board);
     // ShowSqAtBySide(BLACK, board);
