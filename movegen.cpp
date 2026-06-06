@@ -28,21 +28,6 @@ const int PceDir[13][8] = {
     {-1, -10, 1, 10, -9, -11, 11, 9},
 };
 
-const int NumDir[13] = {
-    0,
-    0,
-    8,
-    4,
-    4,
-    8,
-    8,
-    0,
-    8,
-    4,
-    4,
-    8,
-    8};
-
 static void AddQuietMove(const S_BOARD *pos, int move, S_MOVELIST *list)
 {
     list->moves[list->count].move = move;
@@ -57,12 +42,12 @@ static void AddCaptureMove(const S_BOARD *pos, int move, S_MOVELIST *list)
     list->count++;
 }
 
-static void AddEnPassantMove(const S_BOARD *pos, int move, S_MOVELIST *list)
-{
-    list->moves[list->count].move = move;
-    list->moves[list->count].score = 0;
-    list->count++;
-}
+// static void AddEnPassantMove(const S_BOARD *pos, int move, S_MOVELIST *list)
+// {
+//     list->moves[list->count].move = move;
+//     list->moves[list->count].score = 0;
+//     list->count++;
+// }
 
 static void AddWhitePawnCaptureMove(const S_BOARD *pos, const int from, const int to, const int cap, S_MOVELIST *list)
 {

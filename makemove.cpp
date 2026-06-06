@@ -280,7 +280,7 @@ int MakeMove(S_BOARD *pos, int move)
     }
     else if (move & MOVEFLAGCA)
     {
-        // Only moving rooks here, king will be taken care in the coming lines of code like a normal move
+        // Only moving rooks here, king will be taken care in the upcoming lines of code like a normal move
         switch (to)
         {
         case C1:

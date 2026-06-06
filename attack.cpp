@@ -31,8 +31,7 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
     for (index = 0; index < 8; index++)
     {
         pce = pos->pieces[sq + KnDir[index]];
-
-        if (SqOnBoard(pce) && IsKn(pce) && PieceCol[pce] == side)
+        if (IsKn(pce) && PieceCol[pce] == side)
         {
             return true;
         }
@@ -81,7 +80,7 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos)
     for (index = 0; index < 8; index++)
     {
         pce = pos->pieces[sq + KiDir[index]];
-        if (SqOnBoard(pce) && IsKi(pce) && PieceCol[pce] == side)
+        if (IsKi(pce) && PieceCol[pce] == side)
         {
             return true;
         }

@@ -1,0 +1,11 @@
+Perft Suite Discrepancy Report
+Generated: Wed Jun  3 20:28:14 IST 2026
+Suite: /Users/jeenitsharma/Documents/Code/Personal/spike-engine/perftsuite.epd
+
+Summary
+Cases processed: 126
+Checks run:      630
+Passed:          630
+Mismatches:      0
+Errors:          0
+Elapsed seconds: 27

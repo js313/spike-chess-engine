@@ -27,6 +27,14 @@ void Perft(int depth, S_BOARD *pos)
     }
 }
 
+long PerftCount(int depth, S_BOARD *pos)
+{
+    ASSERT(CheckBoard(pos));
+    leafNodes = 0;
+    Perft(depth, pos);
+    return leafNodes;
+}
+
 void PerftTest(int depth, S_BOARD *pos)
 {
     ASSERT(CheckBoard(pos));
