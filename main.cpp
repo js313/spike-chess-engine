@@ -38,8 +38,29 @@ int main()
     // PrintBoard(&board);
     S_BOARD board[1];
 
-    ParseFen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", board);
-    PerftTest(5, board);
+    ParseFen(START_FEN, board);
+    // PerftTest(5, board);
+
+    char input[6];
+    int move = NOMOVE;
+    while (true)
+    {
+        PrintBoard(board);
+        std::cout << "Enter a move > ";
+        std::cin >> input;
+        if (input[0] == 'q')
+            break;
+        else if (input[0] == 't')
+            TakeMove(board);
+        else if (input[0] == 'p')
+            PerftTest(4, board);
+        else
+        {
+            move = ParseMove(input, board);
+            if (move != NOMOVE)
+                MakeMove(board, move);
+        }
+    }
 
     // ParseFen((char *)START_FEN, board);
     // ASSERT(CheckBoard(board));

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-// #define DEBUG
+#define DEBUG
 
 #ifndef DEBUG
 #define ASSERT(n)
@@ -231,7 +231,9 @@ typedef struct
 #define MOVEFLAGCAP 0x7C000   // CAPTURED & EP
 #define MOVEFLAGPROM 0xF00000 // Was piece promoted or not(without the information of promoted to what)
 
-#define FR2SQ(f, r) ((21 + f) + (r * 10))
+#define NOMOVE 0
+
+#define FR2SQ(f, r) ((21 + (f)) + ((r) * 10))
 #define SQ64(sq120) Sq120ToSq64[sq120]
 #define SQ120(sq64) Sq64ToSq120[sq64]
 #define POP(b) PopBit(b)
@@ -300,8 +302,13 @@ extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
 
 extern int MakeMove(S_BOARD *pos, int move);
 extern void TakeMove(S_BOARD *pos);
+extern int ParseMove(char *ptrChar, S_BOARD *pos);
 
 extern long PerftCount(int depth, S_BOARD *pos);
 extern void PerftTest(int depth, S_BOARD *pos);
+
+extern int IsRepitition(const S_BOARD *pos);
+
+extern int GetTimeMs();
 
 #endif
