@@ -28,6 +28,25 @@ const int PceDir[13][8] = {
     {-1, -10, 1, 10, -9, -11, 11, 9},
 };
 
+bool MoveExists(S_BOARD *pos, const int move)
+{
+    S_MOVELIST list[1];
+    GenerateAllMoves(pos, list);
+
+    for (int moveNum = 0; moveNum < list->count; moveNum++)
+    {
+        if (list->moves[moveNum].move == move)
+        {
+            if (!MakeMove(pos, list->moves[moveNum].move))
+                continue;
+            TakeMove(pos);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 static void AddQuietMove(const S_BOARD *pos, int move, S_MOVELIST *list)
 {
     list->moves[list->count].move = move;
@@ -119,6 +138,7 @@ static void AddBlackPawnMove(const S_BOARD *pos, const int from, const int to, S
     }
 }
 
+// Generates all pseudo legal moves, it is upon the caller to validate if it is legal
 void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list)
 {
     ASSERT(CheckBoard(pos));

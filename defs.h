@@ -28,6 +28,8 @@ typedef unsigned long long U64;
 
 #define MAX_GAME_MOVES 2048
 #define MAX_POS_MOVES 256
+#define MAX_DEPTH 64
+
 #define START_FEN "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 #define FEN_1 "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
 #define FEN_2 "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2"
@@ -172,6 +174,18 @@ typedef struct
 
 typedef struct
 {
+    U64 posKey;
+    int move;
+} S_PVENTRY;
+
+typedef struct
+{
+    S_PVENTRY *pTable;
+    int numEntries;
+} S_PVTABLE;
+
+typedef struct
+{
     int pieces[BRD_SQ_NUM];
     U64 pawns[3];
 
@@ -197,6 +211,9 @@ typedef struct
     S_UNDO history[MAX_GAME_MOVES];
 
     int pList[13][10];
+
+    S_PVTABLE PvTable[1];
+    int PvArray[MAX_DEPTH];
 } S_BOARD;
 
 typedef struct
@@ -299,6 +316,7 @@ extern int PieceValidEmpty(const int pce);
 extern int PieceValid(const int pce);
 
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
+extern bool MoveExists(S_BOARD *pos, const int move);
 
 extern int MakeMove(S_BOARD *pos, int move);
 extern void TakeMove(S_BOARD *pos);
@@ -310,5 +328,10 @@ extern void PerftTest(int depth, S_BOARD *pos);
 extern int IsRepitition(const S_BOARD *pos);
 
 extern int GetTimeMs();
+
+extern int GetPvLine(const int depth, S_BOARD *pos);
+extern void InitPvTable(S_PVTABLE *table);
+extern void StorePvMove(S_BOARD *pos, const int move);
+extern int ProbePvTable(const S_BOARD *pos);
 
 #endif

@@ -54,11 +54,29 @@ int main()
             TakeMove(board);
         else if (input[0] == 'p')
             PerftTest(4, board);
+        else if (input[0] == 'r')
+        {
+            int max = GetPvLine(4, board);
+            std::cout << "PvLine of " << max << " Moves: ";
+            for (int pvNum = 0; pvNum < max; pvNum++)
+            {
+                move = board->PvArray[pvNum];
+                std::cout << PrMove(move) << " ";
+            }
+            std::cout << "\n";
+        }
         else
         {
             move = ParseMove(input, board);
             if (move != NOMOVE)
+            {
+                StorePvMove(board, move);
                 MakeMove(board, move);
+            }
+            else
+            {
+                std::cout << "Move not parsed: " << input << std::endl;
+            }
         }
     }
 
