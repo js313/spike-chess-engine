@@ -37,8 +37,11 @@ int main()
     // ParseFen(START_FEN, &board);
     // PrintBoard(&board);
     S_BOARD board[1];
+    S_MOVELIST list[1];
+    S_SEARCHINFO info[1];
 
     ParseFen(START_FEN, board);
+    // ParseFen("2rr3k/pp3pp1/1nnqbN1p/3pN3/2pP4/2P3Q1/PPB4P/R4RK1 w - -", board);
     // PerftTest(5, board);
 
     char input[6];
@@ -64,6 +67,11 @@ int main()
                 std::cout << PrMove(move) << " ";
             }
             std::cout << "\n";
+        }
+        else if (input[0] == 's')
+        {
+            info->depth = 4;
+            SearchPosition(board, info);
         }
         else
         {

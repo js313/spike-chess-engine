@@ -214,7 +214,29 @@ typedef struct
 
     S_PVTABLE PvTable[1];
     int PvArray[MAX_DEPTH];
+
+    int searchHistory[13][BRD_SQ_NUM];
+    int searchKillers[2][MAX_DEPTH];
 } S_BOARD;
+
+typedef struct
+{
+    int startTime;
+    int stopTime;
+    int depth;
+    int depthSet;
+    int timeSet;
+    int movestogo;
+    int infinite;
+
+    long nodes;
+
+    int fh;
+    int fhf;
+
+    int quit;
+    int stopped;
+} S_SEARCHINFO;
 
 typedef struct
 {
@@ -249,6 +271,9 @@ typedef struct
 #define MOVEFLAGPROM 0xF00000 // Was piece promoted or not(without the information of promoted to what)
 
 #define NOMOVE 0
+
+#define INFINITE 30000
+#define MATE 29000
 
 #define FR2SQ(f, r) ((21 + (f)) + ((r) * 10))
 #define SQ64(sq120) Sq120ToSq64[sq120]
@@ -325,13 +350,18 @@ extern int ParseMove(char *ptrChar, S_BOARD *pos);
 extern long PerftCount(int depth, S_BOARD *pos);
 extern void PerftTest(int depth, S_BOARD *pos);
 
-extern int IsRepitition(const S_BOARD *pos);
+extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
+
+// extern int IsRepitition(const S_BOARD *pos);
 
 extern int GetTimeMs();
 
 extern int GetPvLine(const int depth, S_BOARD *pos);
 extern void InitPvTable(S_PVTABLE *table);
+extern void ClearPvTable(S_PVTABLE *table);
 extern void StorePvMove(S_BOARD *pos, const int move);
 extern int ProbePvTable(const S_BOARD *pos);
+
+extern int EvalPosition(const S_BOARD *pos);
 
 #endif
