@@ -4,6 +4,25 @@ static void CheckUp()
 {
 }
 
+static void PickNextMove(int moveNum, S_MOVELIST *list)
+{
+    S_MOVE temp;
+    int bestScore = 0;
+    int bestNum = moveNum;
+
+    for (int index = moveNum; index < list->count; index++)
+    {
+        if (list->moves[index].score > bestScore)
+        {
+            bestScore = list->moves[index].score;
+            bestNum = index;
+        }
+    }
+    temp = list->moves[moveNum];
+    list->moves[moveNum] = list->moves[bestNum];
+    list->moves[bestNum] = temp;
+}
+
 static int IsRepitition(const S_BOARD *pos)
 {
     int index = 0;
@@ -50,14 +69,80 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info)
     info->fhf = 0;
 }
 
+static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info)
+{
+    ASSERT(CheckBoard(pos));
+    info->nodes++;
+
+    if (IsRepitition(pos) || pos->fiftyMove >= 100)
+    {
+        return EvalPosition(pos);
+    }
+
+    int score = EvalPosition(pos);
+
+    if (score >= beta)
+    {
+        return beta;
+    }
+    if (score > alpha)
+    {
+        alpha = score;
+    }
+
+    S_MOVELIST list[1];
+    GenerateAllCaps(pos, list);
+
+    int MoveNum = 0;
+    int legal = 0;
+    int oldAlpha = alpha;
+    int bestMove = NOMOVE;
+    score = -INFINITE;
+    int pvMove = ProbePvTable(pos);
+
+    for (MoveNum = 0; MoveNum < list->count; MoveNum++)
+    {
+        PickNextMove(MoveNum, list);
+        if (!MakeMove(pos, list->moves[MoveNum].move))
+        {
+            continue;
+        }
+
+        legal++;
+        score = -Quiescence(-beta, -alpha, pos, info);
+        TakeMove(pos);
+
+        if (score > alpha)
+        {
+            if (score >= beta)
+            {
+                if (legal == 1)
+                {
+                    info->fhf++;
+                }
+                info->fh++;
+                return beta;
+            }
+            alpha = score;
+            bestMove = list->moves[MoveNum].move;
+        }
+    }
+
+    if (alpha != oldAlpha)
+    {
+        StorePvMove(pos, bestMove);
+    }
+
+    return alpha;
+}
+
 static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO *info, int DoNull)
 {
     ASSERT(CheckBoard(pos));
 
     if (depth == 0)
     {
-        info->nodes++;
-        return EvalPosition(pos);
+        return Quiescence(alpha, beta, pos, info);
     }
 
     info->nodes++;
@@ -80,9 +165,23 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     int oldAlpha = alpha;
     int bestMove = NOMOVE;
     int score = -INFINITE;
+    int pvMove = ProbePvTable(pos);
+
+    if (pvMove != NOMOVE)
+    {
+        for (MoveNum = 0; MoveNum < list->count; MoveNum++)
+        {
+            if (list->moves[MoveNum].move == pvMove)
+            {
+                list->moves[MoveNum].score = 2000000;
+                break;
+            }
+        }
+    }
 
     for (MoveNum = 0; MoveNum < list->count; MoveNum++)
     {
+        PickNextMove(MoveNum, list);
         if (!MakeMove(pos, list->moves[MoveNum].move))
         {
             continue;
@@ -101,10 +200,21 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
                     info->fhf++;
                 }
                 info->fh++;
+
+                if (!list->moves[MoveNum].move & MOVEFLAGCAP)
+                {
+                    pos->searchKillers[1][pos->ply] = pos->searchKillers[0][pos->ply];
+                    pos->searchKillers[0][pos->ply] = list->moves[MoveNum].move;
+                }
+
                 return beta;
             }
             alpha = score;
             bestMove = list->moves[MoveNum].move;
+            if (!list->moves[MoveNum].move & MOVEFLAGCAP)
+            {
+                pos->searchHistory[pos->pieces[FROMSQ(bestMove)]][TOSQ(bestMove)] += depth;
+            }
         }
     }
 
@@ -126,11 +236,6 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     }
 
     return alpha;
-}
-
-static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info)
-{
-    return 0;
 }
 
 void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info)

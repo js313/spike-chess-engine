@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#define DEBUG
+// #define DEBUG
 
 #ifndef DEBUG
 #define ASSERT(n)
@@ -341,7 +341,9 @@ extern int PieceValidEmpty(const int pce);
 extern int PieceValid(const int pce);
 
 extern void GenerateAllMoves(const S_BOARD *pos, S_MOVELIST *list);
+extern void GenerateAllCaps(const S_BOARD *pos, S_MOVELIST *list);
 extern bool MoveExists(S_BOARD *pos, const int move);
+extern int InitMvvLva();
 
 extern int MakeMove(S_BOARD *pos, int move);
 extern void TakeMove(S_BOARD *pos);
