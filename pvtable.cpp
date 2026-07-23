@@ -49,7 +49,7 @@ void InitPvTable(S_PVTABLE *table)
 {
     table->numEntries = PvSize / sizeof(S_PVENTRY);
     table->numEntries -= 2; // to make sure while accessing we do not go over the allocated memory
-    free(table->pTable);
+    // free(table->pTable);
     table->pTable = (S_PVENTRY *)malloc(table->numEntries * sizeof(S_PVENTRY));
     ClearPvTable(table);
     std::cout << "PvTable init complete with " << table->numEntries << " entries\n";

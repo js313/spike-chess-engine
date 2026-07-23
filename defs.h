@@ -34,7 +34,7 @@ typedef unsigned long long U64;
 #define FEN_1 "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
 #define FEN_2 "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2"
 #define FEN_3 "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
-#define FEN_4 "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/pppBBppp/R3K2R w KQkq - 0 1"
+#define FEN_4 "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
 
 enum
 {
@@ -221,13 +221,13 @@ typedef struct
 
 typedef struct
 {
-    int startTime;
-    int stopTime;
+    long long int startTime;
+    long long int stopTime;
     int depth;
     int depthSet;
-    int timeSet;
+    long long int timeSet;
     int movestogo;
-    int infinite;
+    long long int infinite;
 
     long nodes;
 
@@ -321,7 +321,7 @@ extern void PrintBitBoard(U64 bb);
 extern int CountBits(U64 b);
 extern int PopBit(U64 *bb);
 extern void ResetBoard(S_BOARD *pos);
-extern int ParseFen(char *fen, S_BOARD *pos);
+extern int ParseFen(const char *fen, S_BOARD *pos);
 extern U64 GeneratePosKey(const S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
@@ -357,6 +357,7 @@ extern void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info);
 // extern int IsRepitition(const S_BOARD *pos);
 
 extern int GetTimeMs();
+extern void ReadInput(S_SEARCHINFO *info);
 
 extern int GetPvLine(const int depth, S_BOARD *pos);
 extern void InitPvTable(S_PVTABLE *table);
@@ -365,5 +366,7 @@ extern void StorePvMove(S_BOARD *pos, const int move);
 extern int ProbePvTable(const S_BOARD *pos);
 
 extern int EvalPosition(const S_BOARD *pos);
+
+extern void UciLoop();
 
 #endif

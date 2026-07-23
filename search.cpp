@@ -1,7 +1,13 @@
 #include "defs.h"
 
-static void CheckUp()
+static void CheckUp(S_SEARCHINFO *info)
 {
+    if (info->timeSet && GetTimeMs() > info->stopTime)
+    {
+        info->stopped = true;
+    }
+
+    ReadInput(info);
 }
 
 static void PickNextMove(int moveNum, S_MOVELIST *list)
@@ -61,7 +67,6 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info)
     ClearPvTable(pos->PvTable);
     pos->ply = 0;
 
-    info->startTime = GetTimeMs();
     info->stopped = 0;
     info->nodes = 0;
 
@@ -72,6 +77,12 @@ static void ClearForSearch(S_BOARD *pos, S_SEARCHINFO *info)
 static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info)
 {
     ASSERT(CheckBoard(pos));
+
+    if ((info->nodes & 2047) == 0)
+    {
+        CheckUp(info);
+    }
+
     info->nodes++;
 
     if (IsRepitition(pos) || pos->fiftyMove >= 100)
@@ -112,6 +123,11 @@ static int Quiescence(int alpha, int beta, S_BOARD *pos, S_SEARCHINFO *info)
         score = -Quiescence(-beta, -alpha, pos, info);
         TakeMove(pos);
 
+        if (info->stopped)
+        {
+            return 0;
+        }
+
         if (score > alpha)
         {
             if (score >= beta)
@@ -143,6 +159,11 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     if (depth == 0)
     {
         return Quiescence(alpha, beta, pos, info);
+    }
+
+    if ((info->nodes & 2047) == 0)
+    {
+        CheckUp(info);
     }
 
     info->nodes++;
@@ -191,6 +212,11 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
         score = -AlphaBeta(-beta, -alpha, depth - 1, pos, info, true);
         TakeMove(pos);
 
+        if (info->stopped)
+        {
+            return 0;
+        }
+
         if (score > alpha)
         {
             if (score >= beta)
@@ -201,7 +227,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
                 }
                 info->fh++;
 
-                if (!list->moves[MoveNum].move & MOVEFLAGCAP)
+                if (!(list->moves[MoveNum].move & MOVEFLAGCAP))
                 {
                     pos->searchKillers[1][pos->ply] = pos->searchKillers[0][pos->ply];
                     pos->searchKillers[0][pos->ply] = list->moves[MoveNum].move;
@@ -211,7 +237,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
             }
             alpha = score;
             bestMove = list->moves[MoveNum].move;
-            if (!list->moves[MoveNum].move & MOVEFLAGCAP)
+            if (!(list->moves[MoveNum].move & MOVEFLAGCAP))
             {
                 pos->searchHistory[pos->pieces[FROMSQ(bestMove)]][TOSQ(bestMove)] += depth;
             }
@@ -250,10 +276,15 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info)
     for (currentDepth = 1; currentDepth <= info->depth; currentDepth++)
     {
         bestScore = AlphaBeta(-INFINITE, INFINITE, currentDepth, pos, info, true);
+
+        if (info->stopped)
+        {
+            break;
+        }
         pvMoves = GetPvLine(currentDepth, pos);
         bestMove = pos->PvArray[0];
 
-        std::cout << "Depth: " << currentDepth << " | Score: " << bestScore << " | Move: " << PrMove(bestMove) << " | Nodes: " << info->nodes;
+        std::cout << "Info score cp: " << bestScore << " depth: " << currentDepth << " nodes: " << info->nodes << " time: " << GetTimeMs() - info->startTime;
 
         pvMoves = GetPvLine(currentDepth, pos);
         std::cout << " | PV:";
@@ -262,6 +293,8 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info)
             std::cout << " " << PrMove(pos->PvArray[pvNum]);
         }
         std::cout << "\n";
-        std::cout << "Ordering: " << ((float)info->fhf / info->fh) << std::endl;
+        // std::cout << "Ordering: " << ((float)info->fhf / info->fh) << std::endl;
     }
+
+    std::cout << "Best Move: " << PrMove(bestMove) << "\n";
 }

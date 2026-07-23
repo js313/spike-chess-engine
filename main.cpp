@@ -31,62 +31,65 @@ void ShowSqAtBySide(const int side, const S_BOARD *pos)
 int main()
 {
     AllInit();
+    UciLoop();
 
     // An array to prevent the calls looking like:-
     // S_BOARD board;
     // ParseFen(START_FEN, &board);
     // PrintBoard(&board);
-    S_BOARD board[1];
-    S_MOVELIST list[1];
-    S_SEARCHINFO info[1];
+    // S_BOARD board[1];
+    // S_MOVELIST list[1];
+    // S_SEARCHINFO info[1];
 
-    // ParseFen(START_FEN, board);
-    ParseFen("r1b1k2r/ppppnppp/2n2q2/2b5/3NP3/2P1B3/PP3PPP/RN1QKB1R w KQkq - 0 1", board);
-    // PerftTest(5, board);
+    // // ParseFen(START_FEN, board);
+    // ParseFen("r1b1k2r/ppppnppp/2n2q2/2b5/3NP3/2P1B3/PP3PPP/RN1QKB1R w KQkq - 0 1", board);
+    // // PerftTest(5, board);
 
-    char input[6];
-    int move = NOMOVE;
-    while (true)
-    {
-        PrintBoard(board);
-        std::cout << "Enter a move > ";
-        std::cin >> input;
-        if (input[0] == 'q')
-            break;
-        else if (input[0] == 't')
-            TakeMove(board);
-        else if (input[0] == 'p')
-            PerftTest(4, board);
-        else if (input[0] == 'r')
-        {
-            int max = GetPvLine(4, board);
-            std::cout << "PvLine of " << max << " Moves: ";
-            for (int pvNum = 0; pvNum < max; pvNum++)
-            {
-                move = board->PvArray[pvNum];
-                std::cout << PrMove(move) << " ";
-            }
-            std::cout << "\n";
-        }
-        else if (input[0] == 's')
-        {
-            info->depth = 6;
-            SearchPosition(board, info);
-        }
-        else
-        {
-            move = ParseMove(input, board);
-            if (move != NOMOVE)
-            {
-                StorePvMove(board, move);
-                MakeMove(board, move);
-            }
-            else
-            {
-                std::cout << "Move not parsed: " << input << std::endl;
-            }
-        }
-    }
+    // char input[6];
+    // int move = NOMOVE;
+    // while (true)
+    // {
+    //     PrintBoard(board);
+    //     std::cout << "Enter a move > ";
+    //     std::cin >> input;
+    //     if (input[0] == 'q')
+    //         break;
+    //     else if (input[0] == 't')
+    //         TakeMove(board);
+    //     else if (input[0] == 'p')
+    //         PerftTest(4, board);
+    //     else if (input[0] == 'r')
+    //     {
+    //         int max = GetPvLine(4, board);
+    //         std::cout << "PvLine of " << max << " Moves: ";
+    //         for (int pvNum = 0; pvNum < max; pvNum++)
+    //         {
+    //             move = board->PvArray[pvNum];
+    //             std::cout << PrMove(move) << " ";
+    //         }
+    //         std::cout << "\n";
+    //     }
+    //     else if (input[0] == 's')
+    //     {
+    //         info->depth = 6;
+    //         info->startTime = GetTimeMs();
+    //         info->stopTime = GetTimeMs() + 200000;
+    //         SearchPosition(board, info);
+    //     }
+    //     else
+    //     {
+    //         move = ParseMove(input, board);
+    //         if (move != NOMOVE)
+    //         {
+    //             StorePvMove(board, move);
+    //             MakeMove(board, move);
+    //         }
+    //         else
+    //         {
+    //             std::cout << "Move not parsed: " << input << std::endl;
+    //         }
+    //     }
+    // }
 
     // ParseFen((char *)START_FEN, board);
     // ASSERT(CheckBoard(board));
