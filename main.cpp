@@ -31,7 +31,11 @@ void ShowSqAtBySide(const int side, const S_BOARD *pos)
 int main()
 {
     AllInit();
-    UciLoop();
+
+    S_BOARD pos[1] = {};
+    S_SEARCHINFO info[1] = {};
+    InitPvTable(pos->PvTable);
+    UciLoop(pos, info);
 
     // An array to prevent the calls looking like:-
     // S_BOARD board;
@@ -137,6 +141,11 @@ int main()
 
     // ParseFen((char *)FEN_4, board);
     // PrintBoard(board);
-
+    if (pos->PvTable->pTable != NULL)
+    {
+        free(pos->PvTable->pTable);
+        pos->PvTable->pTable = NULL;
+        pos->PvTable->numEntries = 0;
+    }
     return 0;
 }

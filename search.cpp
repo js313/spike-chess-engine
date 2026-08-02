@@ -168,7 +168,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
 
     info->nodes++;
 
-    if (IsRepitition(pos) || pos->fiftyMove >= 100)
+    if ((IsRepitition(pos) || pos->fiftyMove >= 100) && pos->ply)
     {
         return 0;
     }
@@ -283,6 +283,42 @@ void SearchPosition(S_BOARD *pos, S_SEARCHINFO *info)
         }
         pvMoves = GetPvLine(currentDepth, pos);
         bestMove = pos->PvArray[0];
+        if (info->GAME_MODE == UCIMODE)
+        {
+            std::cout << "info score cp " << bestScore << " depth " << currentDepth << " node " << info->nodes << "time " << GetTimeMs() - info->startTime << " ";
+        }
+        else if (info->GAME_MODE == XBOARDMODE && info->POST_THINKING)
+        {
+            std::cout << currentDepth << " " << bestScore << " " << (GetTimeMs() - info->startTime) / 10 << " " << info->nodes << " ";
+        }
+        else if (info->POST_THINKING)
+        {
+            std::cout << "score " << bestScore << " depth " << currentDepth << " node " << info->nodes << "time " << GetTimeMs() - info->startTime << " ";
+        }
+        if (info->GAME_MODE == UCIMODE || info->POST_THINKING)
+        {
+            pvMoves = GetPvLine(currentDepth, pos);
+            std::cout << "pv";
+            for (pvNum = 0; pvNum < pvMoves; pvNum++)
+                std::cout << " " << PrMove(pos->PvArray[pvNum]);
+            std::cout << "\n";
+        }
+
+        if (info->GAME_MODE == UCIMODE)
+        {
+            std::cout << "bestmove " << PrMove(bestMove) << "\n";
+        }
+        else if (info->GAME_MODE == XBOARDMODE)
+        {
+            std::cout << "move " << PrMove(bestMove) << "\n";
+            MakeMove(pos, bestMove);
+        }
+        else
+        {
+            std::cout << "\n\n***!! Spike makes move " << PrMove(bestMove) << " !!***\n\n";
+            MakeMove(pos, bestMove);
+            PrintBoard(pos);
+        }
 
         std::cout << "Info score cp: " << bestScore << " depth: " << currentDepth << " nodes: " << info->nodes << " time: " << GetTimeMs() - info->startTime;
 

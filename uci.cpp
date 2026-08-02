@@ -119,16 +119,12 @@ void ParsePosition(const char *lineIn, S_BOARD *pos)
     PrintBoard(pos);
 }
 
-void UciLoop()
+void UciLoop(S_BOARD *pos, S_SEARCHINFO *info)
 {
     char line[INPUTBUFFER];
     std::cout << "id name" << NAME << std::endl;
     std::cout << "id author Jeenit\n";
     std::cout << "uciok\n";
-
-    S_BOARD pos[1] = {};
-    S_SEARCHINFO info[1] = {};
-    InitPvTable(pos->PvTable);
 
     while (true)
     {
@@ -171,12 +167,5 @@ void UciLoop()
 
         if (info->quit)
             break;
-    }
-
-    if (pos->PvTable->pTable != NULL)
-    {
-        free(pos->PvTable->pTable);
-        pos->PvTable->pTable = NULL;
-        pos->PvTable->numEntries = 0;
     }
 }

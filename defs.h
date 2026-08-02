@@ -87,6 +87,13 @@ enum
 
 enum
 {
+    UCIMODE,
+    XBOARDMODE,
+    CONSOLEMODE
+};
+
+enum
+{
     A1 = 21,
     B1,
     C1,
@@ -236,6 +243,9 @@ typedef struct
 
     int quit;
     int stopped;
+
+    int GAME_MODE;
+    bool POST_THINKING;
 } S_SEARCHINFO;
 
 typedef struct
@@ -367,6 +377,8 @@ extern int ProbePvTable(const S_BOARD *pos);
 
 extern int EvalPosition(const S_BOARD *pos);
 
-extern void UciLoop();
+extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
+extern void xBoardLoop(S_BOARD *pos, S_SEARCHINFO *info);
+extern void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info);
 
 #endif
