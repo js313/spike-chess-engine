@@ -335,3 +335,44 @@ void PrintBoard(const S_BOARD *pos)
               << std::endl;
     std::cout << "PosKey: " << pos->posKey << std::endl;
 }
+
+void MirrorBoard(S_BOARD *pos) {
+    static const int MirrorPiece[13] = { EMPTY, bP, bN, bB, bR, bQ, bK, wP, wN, wB, wR, wQ, wK };
+
+    int tempPiecesArray[64];
+
+    int tempSide = (pos->side == WHITE) ? BLACK : WHITE;
+
+    int tempCastle = 0;
+    if (pos->castlePerm & WKCA) tempCastle |= BKCA;
+    if (pos->castlePerm & WQCA) tempCastle |= BQCA;
+    if (pos->castlePerm & BKCA) tempCastle |= WKCA;
+    if (pos->castlePerm & BQCA) tempCastle |= WQCA;
+
+    int tempEnPas = NO_SQ;
+    if (pos->enPas != NO_SQ) {
+        tempEnPas = SQ120(SQ64(pos->enPas) ^ 56);
+    }
+
+    for (int sq = 0; sq < 64; sq++) {
+        tempPiecesArray[sq] = MirrorPiece[pos->pieces[SQ120(sq ^ 56)]];
+    }
+
+    ResetBoard(pos);
+
+    for (int sq = 0; sq < 64; sq++) {
+        int piece = tempPiecesArray[sq];
+        if (piece != EMPTY) {
+            pos->pieces[SQ120(sq)] = piece;
+        }
+    }
+
+    pos->side = tempSide;
+    pos->castlePerm = tempCastle;
+    pos->enPas = tempEnPas;
+
+    pos->posKey = GeneratePosKey(pos);
+    UpdateListsMaterial(pos);
+
+    ASSERT(CheckBoard(pos));
+}

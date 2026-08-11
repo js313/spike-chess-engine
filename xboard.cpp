@@ -360,6 +360,7 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info)
 {
     char inBuf[80], command[80];
     int move = NOMOVE;
+    int engineSide = BLACK;
 
     info->GAME_MODE = CONSOLEMODE;
     info->POST_THINKING = true;
@@ -399,6 +400,17 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info)
             continue;
         }
 
+        if (!strcmp(command, "mirror"))
+        {
+            PrintBoard(pos);
+            std::cout << "Eval:" << EvalPosition(pos) << std::endl;
+            MirrorBoard(pos);
+            PrintBoard(pos);
+            std::cout << "Eval:" << EvalPosition(pos) << std::endl;
+            MirrorBoard(pos);
+            continue;
+        }
+
         if (!strcmp(command, "quit"))
         {
             info->quit = true;
@@ -407,6 +419,7 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info)
 
         if (!strcmp(command, "new"))
         {
+            engineSide = BLACK;
             ParseFen(START_FEN, pos);
             PrintBoard(pos);
             continue;
@@ -414,11 +427,13 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info)
 
         if (!strcmp(command, "force"))
         {
+            engineSide = BOTH;
             continue;
         }
 
         if (!strcmp(command, "go"))
         {
+            engineSide = pos->side;
             info->depth = MAX_DEPTH;
             info->timeSet = false;
             SearchPosition(pos, info);
@@ -510,10 +525,13 @@ void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info)
         pos->ply = 0;
         PrintBoard(pos);
 
-        // After user move, let engine respond
-        info->depth = MAX_DEPTH;
-        info->timeSet = false;
-        SearchPosition(pos, info);
-        PrintBoard(pos);
+        // After user move, let engine respond if it should play
+        if (engineSide == pos->side)
+        {
+            info->depth = MAX_DEPTH;
+            info->timeSet = false;
+            SearchPosition(pos, info);
+            PrintBoard(pos);
+        }
     }
 }

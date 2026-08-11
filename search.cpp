@@ -178,6 +178,13 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
         return EvalPosition(pos);
     }
 
+    bool inCheck = SqAttacked(pos->kingSq[pos->side], pos->side ^ 1, pos);
+
+    if (inCheck)
+    {
+        depth++;
+    }
+
     S_MOVELIST list[1];
     GenerateAllMoves(pos, list);
 
@@ -246,7 +253,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
 
     if (legal == 0)
     {
-        if (SqAttacked(pos->kingSq[pos->side], pos->side ^ 1, pos))
+        if (inCheck)
         {
             return -MATE + pos->ply;
         }

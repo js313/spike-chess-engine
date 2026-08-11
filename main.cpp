@@ -35,7 +35,7 @@ int main()
     S_BOARD pos[1] = {};
     S_SEARCHINFO info[1] = {};
     InitPvTable(pos->PvTable);
-    UciLoop(pos, info);
+    ConsoleLoop(pos, info);
 
     // An array to prevent the calls looking like:-
     // S_BOARD board;

@@ -298,6 +298,8 @@ typedef struct
 #define IsKn(p) (PieceKnight[(p)])
 #define IsKi(p) (PieceKing[(p)])
 
+#define MIRROR64(sq) (Mirror64[(sq)])
+
 extern int Sq120ToSq64[BRD_SQ_NUM];
 extern int Sq64ToSq120[64];
 extern U64 SetMask[64];
@@ -318,6 +320,8 @@ extern int PieceCol[13];
 
 extern int FilesBrd[BRD_SQ_NUM];
 extern int RanksBrd[BRD_SQ_NUM];
+extern U64 FileBBMask[8];
+extern U64 RankBBMask[8];
 
 extern int PiecePawn[13];
 extern int PieceKnight[13];
@@ -325,6 +329,12 @@ extern int PieceKing[13];
 extern int PieceRookQueen[13];
 extern int PieceBishopQueen[13];
 extern int PieceSlides[13];
+
+extern int Mirror64[64];
+
+extern U64 BlackPassedMask[64];
+extern U64 WhitePassedMask[64];
+extern U64 IsolatedMask[64];
 
 extern void AllInit();
 extern void PrintBitBoard(U64 bb);
@@ -336,6 +346,7 @@ extern U64 GeneratePosKey(const S_BOARD *pos);
 extern void PrintBoard(const S_BOARD *pos);
 extern void UpdateListsMaterial(S_BOARD *pos);
 extern int CheckBoard(const S_BOARD *pos);
+extern void MirrorBoard(S_BOARD *pos);
 
 extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
 
