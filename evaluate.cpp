@@ -8,6 +8,7 @@ const int RookOpenFile = 10;
 const int RookSemiOpenFile = 5;
 const int QueenOpenFile = 5;
 const int QueenSemiOpenFile = 3;
+const int BishopPair = 30;  
 
 const int pawnTable[64] = {
     0, 0, 0, 0, 0, 0, 0, 0,
@@ -52,10 +53,10 @@ const int rookTable[64] = {
 const int KingE[64] = {
     -50, -10, 0, 0, 0, 0, -10, -50,
     -10, 0, 10, 10, 10, 10, 0, -10,
-    0, 10, 20, 20, 20, 20, 10, 0,
-    0, 10, 20, 40, 40, 20, 10, 0,
-    0, 10, 20, 40, 40, 20, 10, 0,
-    0, 10, 20, 20, 20, 20, 10, 0,
+    0, 10, 15, 15, 15, 15, 10, 0,
+    0, 10, 15, 20, 20, 15, 10, 0,
+    0, 10, 15, 20, 20, 15, 10, 0,
+    0, 10, 15, 15, 15, 15, 10, 0,
     -10, 0, 10, 10, 10, 10, 0, -10,
     -50, -10, 0, 0, 0, 0, -10, -50};
 
@@ -289,6 +290,9 @@ int EvalPosition(const S_BOARD *pos)
     {
         score -= KingO[MIRROR64(SQ64(sq))];
     }
+
+    if(pos->pceNum[wB] >= 2) score += BishopPair;
+	if(pos->pceNum[bB] >= 2) score -= BishopPair;
 
     if (pos->side == WHITE)
     {

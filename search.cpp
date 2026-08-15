@@ -185,6 +185,24 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
         depth++;
     }
 
+    int score = -INFINITE;
+
+    if (DoNull && !inCheck && pos->ply && (pos->bigPce[pos->side] > 1) && depth >= 4)
+    {
+        MakeNullMove(pos);
+        score = -AlphaBeta(-beta, -beta + 1, depth - 4, pos, info, false);
+        TakeNullMove(pos);
+        if (info->stopped)
+        {
+            return 0;
+        }
+
+        if (score >= beta)
+        {
+            return beta;
+        }
+    }
+
     S_MOVELIST list[1];
     GenerateAllMoves(pos, list);
 
@@ -192,7 +210,7 @@ static int AlphaBeta(int alpha, int beta, int depth, S_BOARD *pos, S_SEARCHINFO 
     int legal = 0;
     int oldAlpha = alpha;
     int bestMove = NOMOVE;
-    int score = -INFINITE;
+    score = -INFINITE;
     int pvMove = ProbePvTable(pos);
 
     if (pvMove != NOMOVE)

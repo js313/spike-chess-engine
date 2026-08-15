@@ -36,6 +36,9 @@ typedef unsigned long long U64;
 #define FEN_3 "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2"
 #define FEN_4 "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1"
 
+#define AB_BOUND 30000
+#define ISMATE (AB_BOUND - MAXDEPTH)
+
 enum
 {
     EMPTY,
@@ -391,5 +394,8 @@ extern int EvalPosition(const S_BOARD *pos);
 extern void UciLoop(S_BOARD *pos, S_SEARCHINFO *info);
 extern void xBoardLoop(S_BOARD *pos, S_SEARCHINFO *info);
 extern void ConsoleLoop(S_BOARD *pos, S_SEARCHINFO *info);
+
+extern void MakeNullMove(S_BOARD *pos);
+extern void TakeNullMove(S_BOARD *pos);
 
 #endif
